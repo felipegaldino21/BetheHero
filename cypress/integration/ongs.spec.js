@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('Ongs', () => {
-    it('Devem poder realizar um cadastro', () => {
+    it.skip('Devem poder realizar um cadastro', () => {
         //Preenchimento do cadastro com os dados
         cy.visit('register')
         cy.get('[placeholder="Nome da ONG"]').type("Ong dos Dogs");
@@ -22,10 +22,22 @@ describe('Ongs', () => {
         })
     });
 
-    it('Devem poder realizar login no sistema', () => {
+    it.skip('Devem poder realizar login no sistema', () => {
 
         cy.visit('http://localhost:3000/');
         cy.get('input').type(Cypress.env('createdOngId'));
         cy.get('.button').click();
     })
+
+    it('Devem poder realizar logout no sistema', () => {
+        
+        // cy.visit('http://localhost:3000/profile' , {
+        //     onBeforeLoad: (browser) => {
+        //         browser.localStorage.setItem('ongId' , Cypress.env('createdOngId'))
+        //         browser.localStorage.setItem('ongName' , 'Ong dos Dogs');
+        //     }
+        // });
+        cy.login();
+        cy.get('button').click();
+    });
 });

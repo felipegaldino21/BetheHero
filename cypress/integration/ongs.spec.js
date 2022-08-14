@@ -29,7 +29,7 @@ describe('Ongs', () => {
         cy.get('.button').click();
     })
 
-    it('Devem poder realizar logout no sistema', () => {
+    it.skip('Devem poder realizar logout no sistema', () => {
         
         // cy.visit('http://localhost:3000/profile' , {
         //     onBeforeLoad: (browser) => {
@@ -39,5 +39,24 @@ describe('Ongs', () => {
         // });
         cy.login();
         cy.get('button').click();
+    });
+
+    it('Devem poder cadastrar novos casos', () => {
+        cy.login()
+
+        cy.get('.button').click();
+        cy.get('[placeholder="Titulo do Caso"]').type('Cãozinho abandonado')
+        cy.get('textarea').type('Cãozinho abandonado foi visto na região da Freguesia do Ó, próximo a Av. Itaberaba e precisa de adoção ou achar o seu dono.')
+        cy.get('[placeholder="Valor em Reais"]').type(200)
+       
+        //POST 200 /incidents
+        cy.route('POST' ,'**/incidents').as('newIncident');
+
+        cy.get('.button').click();
+        cy.wait('@newIncident').then((xhr) =>{
+            expect(xhr.status).to.equal(200);
+            expect(xhr.response.body).has.property('id');
+            expect(xhr.response.body.id).is.not.null;
+        })
     });
 });

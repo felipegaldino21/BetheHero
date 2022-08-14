@@ -8,6 +8,6 @@ Para testes do projeto para cadastro de ongs be The Hero, deve instalar o APP Be
 
 
 
-os testes estão usando a versão 9 do cypress.<brP
+os testes estão usando a versão 9 do cypress.<br>
 
 ``npm install cypress@9.1.1 --save -include=dev``

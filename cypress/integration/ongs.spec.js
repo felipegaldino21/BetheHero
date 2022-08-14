@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('Ongs', () => {
-    it.skip('Devem poder realizar um cadastro', () => {
+    it('Devem poder realizar um cadastro', () => {
         //Preenchimento do cadastro com os dados
         cy.visit('register')
         cy.get('[placeholder="Nome da ONG"]').type("Ong dos Dogs");
@@ -12,7 +12,6 @@ describe('Ongs', () => {
 
         //Clicar no botão de cadastro
 
-        cy.server();
         cy.route('POST' , '**/ongs').as('postOng');
         cy.get('.button').click();
 
@@ -21,11 +20,12 @@ describe('Ongs', () => {
             expect(xhr.response.body).has.property('id');
             expect(xhr.response.body.id).is.not.null;
         })
-
-       
     });
 
     it('Devem poder realizar login no sistema', () => {
-     
+
+        cy.visit('http://localhost:3000/');
+        cy.get('input').type(Cypress.env('createdOngId'));
+        cy.get('.button').click();
     })
 });

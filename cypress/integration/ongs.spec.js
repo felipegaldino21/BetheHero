@@ -41,7 +41,7 @@ describe('Ongs', () => {
         cy.get('button').click();
     });
 
-    it('Devem poder cadastrar novos casos', () => {
+    it.skip('Devem poder cadastrar novos casos', () => {
         cy.login()
 
         cy.get('.button').click();
@@ -57,6 +57,22 @@ describe('Ongs', () => {
             expect(xhr.status).to.equal(200);
             expect(xhr.response.body).has.property('id');
             expect(xhr.response.body.id).is.not.null;
+        })
+    });
+
+    it('Devem poder excluir um caso', () => {
+
+        cy.createNewIncident();
+        cy.login();
+        
+        //DELETE http://localhost:3333/incidents/44
+        cy.route('DELETE' , '**/incidents/*').as('deleteIncident');
+        
+        cy.get('li > button > svg').click();
+
+        cy.wait('@deleteIncident').then((xhr) =>{
+            expect(xhr.status).to.equal(204);
+            expect(xhr.response.body).to.be.empty;
         })
     });
 });

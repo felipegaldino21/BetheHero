@@ -24,6 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+
 Cypress.Commands.add("createOng", () =>{
     cy.request({
         method: 'POST',
@@ -41,6 +42,24 @@ Cypress.Commands.add("createOng", () =>{
 
         Cypress.env('createdOngId', response.body.id);
     });
+})
+
+Cypress.Commands.add("createNewIncident" , () =>{
+    cy.request({
+        method: 'POST',
+        url: 'http://localhost:3333/incidents',
+        headers: { 'Authorization':`${Cypress.env('createdOngId')}`,},
+        body: {
+            description: "Cãozinho abandonado foi visto na região da Freguesia do Ó, próximo a Av. Itaberaba e precisa de adoção ou achar o seu dono.",
+            title: "Cãozinho abandonado",
+            value: "200"
+        }
+    }).then(response => {
+        expect(response.body.id).is.not.null;
+        cy.log(response.body.id);
+
+        Cypress.env('createdIncidentId' , response.body.id);
+    })
 })
 
 Cypress.Commands.add("login" , () =>{

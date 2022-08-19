@@ -1,35 +1,29 @@
 /// <reference types="cypress" />
 
+import Logon from "../support/Pages/Logon";
+import Register from "../support/Pages/Register";
+import Profile from "../support/Pages/Profile";
+import NewIncident from "../support/Pages/NewIncident";
+
 describe('Ongs', () => {
-    it.skip('Devem poder realizar um cadastro', () => {
-        //Preenchimento do cadastro com os dados
-        cy.visit('register')
-        cy.get('[placeholder="Nome da ONG"]').type("Ong dos Dogs");
-        cy.get('[type="email"]').type("Ddogs@email.com");
-        cy.get('[placeholder="WhatsApp"]').type("11965844787");
-        cy.get('[placeholder="Cidade"]').type("Sao Paulo");
-        cy.get('[placeholder="UF"]').type("SP");
-
-        //Clicar no botão de cadastro
-
-        cy.route('POST' , '**/ongs').as('postOng');
-        cy.get('.button').click();
-
-        cy.wait('@postOng').then((xhr) =>{
-            expect(xhr.status).be.eq(200);
-            expect(xhr.response.body).has.property('id');
-            expect(xhr.response.body.id).is.not.null;
-        })
+    it('Devem poder realizar um cadastro', () => {
+        Register.acessarCadastro();
+        Register.preencherCadastro();
+        Register.validarCadastroDeOngComSucesso();
     });
 
-    it.skip('Devem poder realizar login no sistema', () => {
+    it('Devem poder realizar login no sistema', () => {
 
-        cy.visit('http://localhost:3000/');
-        cy.get('input').type(Cypress.env('createdOngId'));
-        cy.get('.button').click();
+        // cy.visit('http://localhost:3000/');
+        // cy.get('input').type(Cypress.env('createdOngId'));
+        // cy.get('.button').click();
+
+        Logon.acessarLogin();
+        Logon.preencherLogin();
+
     })
 
-    it.skip('Devem poder realizar logout no sistema', () => {
+    it('Devem poder realizar logout no sistema', () => {
         
         // cy.visit('http://localhost:3000/profile' , {
         //     onBeforeLoad: (browser) => {
@@ -38,41 +32,21 @@ describe('Ongs', () => {
         //     }
         // });
         cy.login();
-        cy.get('button').click();
+        Profile.clicarNoBotãoLogout();
     });
 
-    it.skip('Devem poder cadastrar novos casos', () => {
+    it('Devem poder cadastrar novos casos', () => {
         cy.login()
 
-        cy.get('.button').click();
-        cy.get('[placeholder="Titulo do Caso"]').type('Cãozinho abandonado')
-        cy.get('textarea').type('Cãozinho abandonado foi visto na região da Freguesia do Ó, próximo a Av. Itaberaba e precisa de adoção ou achar o seu dono.')
-        cy.get('[placeholder="Valor em Reais"]').type(200)
-       
-        //POST 200 /incidents
-        cy.route('POST' ,'**/incidents').as('newIncident');
-
-        cy.get('.button').click();
-        cy.wait('@newIncident').then((xhr) =>{
-            expect(xhr.status).to.equal(200);
-            expect(xhr.response.body).has.property('id');
-            expect(xhr.response.body.id).is.not.null;
-        })
+        Profile.clicarNoBotãoNovosCasos();
+        NewIncident.preencherCadastroDeCaso();
+        NewIncident.validarCadastroDeCaso();
     });
 
     it('Devem poder excluir um caso', () => {
-
         cy.createNewIncident();
         cy.login();
-        
-        //DELETE http://localhost:3333/incidents/44
-        cy.route('DELETE' , '**/incidents/*').as('deleteIncident');
-        
-        cy.get('li > button > svg').click();
-
-        cy.wait('@deleteIncident').then((xhr) =>{
-            expect(xhr.status).to.equal(204);
-            expect(xhr.response.body).to.be.empty;
-        })
+        Profile.clicarNoBotãoExcluirUmCaso();
+        Profile.validarExclusãoDeCasoComSucesso();
     });
 });
